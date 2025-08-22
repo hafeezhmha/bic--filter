@@ -31,8 +31,11 @@ def event_matches(event):
 
 def main():
     # fetch
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+    }
     try:
-        resp = requests.get(FEED_URL, timeout=15)
+        resp = requests.get(FEED_URL, timeout=15, headers=headers)
         resp.raise_for_status()
     except Exception as e:
         print(f"⚠️ Error fetching feed: {e}")
