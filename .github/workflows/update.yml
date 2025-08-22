@@ -1,0 +1,32 @@
+name: Update BIC Filtered Calendar
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # runs daily at 3 AM UTC
+  workflow_dispatch:      # allow manual trigger
+
+jobs:
+  update-calendar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests icalendar
+
+      - name: Run filter script
+        run: python filter_bic.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add bic_filtered.ics log.md
+          git commit -m "Update filtered calendar and log" || echo "No changes to commit"
+          git push
